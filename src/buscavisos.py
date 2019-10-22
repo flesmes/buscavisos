@@ -38,8 +38,7 @@ def main():
     file.write('\n'.join(resultado))
     file.write('\n')
     print('\n'.join(resultado))
-    
-main()
 
-#print('\n'.join([str(aviso) for aviso in filtrado()]))
+if __name__ == '__main__':    
+    main()
 

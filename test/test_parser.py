@@ -131,7 +131,3 @@ def test_parse_file_2():
 def test_parse_file_3():
     avisos = parse_file(file3)
     assert len(avisos) == 0
-
-
-
-#test_parse_fenomeno1()

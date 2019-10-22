@@ -30,13 +30,10 @@ class AvisosParser:
         self.tipo_nuevo = True
         
     def get_lines(self, filename):
-        file = open(filename, encoding = 'latin1')
-        content = file.readlines()
-        file.close()
-        
         self.lines = []
+        file = open(filename, encoding = 'latin1')
         on_header = True
-        for content_item in content:
+        for content_item in file:
             content_line = content_item[:-1]
             if on_header:
                 if len(content_line) == 0 or content_line[-1] != '.':
@@ -54,6 +51,7 @@ class AvisosParser:
                         line += content_line[:-1]
                     self.lines.append(line)
                     line = ''
+        file.close()
 
     def end(self):
         return self.iline >= len(self.lines)
