@@ -9,6 +9,18 @@ file1 = avisos_path + '/2018/20180101095147_692501CTL_Z_C_AM_VI.txt'
 file2 = avisos_path + '/2007/20070121093701_80ECA.txt'
 file3 = avisos_path + '/2018/20180220074237_692501CTL_Z_C_AM_VI.txt'
 
+def test_content_1():
+    parser = AvisosParser(file1)
+    assert len(parser.lines) == 18
+    assert parser.lines[10] == 'Fenómeno(1) - Vientos'
+    assert parser.lines[17] == 'Comentario: Viento de noroeste. Este aviso se refiere a cotas altas del Pirineo'
+
+def test_content_2():
+    parser = AvisosParser(file2)
+    assert parser.lines[0] == 'WOSP70 LEMM 210937 '
+    assert parser.lines[24] == 'Fenómeno(2) - Nevadas'
+    assert parser.lines[48] == 'Fenómeno(2) - Costeros'
+
 def test_end():
     parser = AvisosParser(file1)
     assert parser.end() == False

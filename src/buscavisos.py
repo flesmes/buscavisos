@@ -7,7 +7,7 @@ from avisos_parser import parse_file
 pat_dia = re.compile(r'(..)/(..)/(....)')
 
 def filtrado():
-    path_avisos = '../avisos/2013/*'
+    path_avisos = '../avisos/*/*'
     for file in glob.glob(path_avisos):
         avisos = parse_file(file)
         for aviso in avisos:
@@ -34,12 +34,12 @@ def main():
         fechas.update(set(get_fechas(aviso)))
     resultado = sorted(list(fechas))
     print(len(resultado))
-    #file = open('dias_aviso_aran.txt','w')
-    #file.write('\n'.join(resultado))
-    #file.write('\n')
+    file = open('dias_aviso_aran.txt','w')
+    file.write('\n'.join(resultado))
+    file.write('\n')
     print('\n'.join(resultado))
     
-#main()
+main()
 
-print('\n'.join([str(aviso) for aviso in filtrado()]))
+#print('\n'.join([str(aviso) for aviso in filtrado()]))
 

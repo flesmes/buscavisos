@@ -13,23 +13,47 @@ def removed(l,v):
 
 class AvisosParser:
 
-    pat_fenomeno = re.compile(r'Fenómeno\(\d+\) - (.+)\.')
-    pat_ambitos_nuevo = re.compile(r'Ámbito geográfico: (.+)\.')
-    pat_ambitos_viejo = re.compile(r'(.+)\.')
+    pat_fenomeno = re.compile(r'Fenómeno\(\d+\) - (.+)')
+    pat_ambitos_nuevo = re.compile(r'Ámbito geográfico: (.+)')
+    pat_ambitos_viejo = re.compile(r'(.+)')
     pat_zonas = re.compile(r'(\w+) \((.+)\)')
-    pat_hora = r'(..:..) hora oficial del (..\/..\/....)\.'
+    pat_hora = r'(..:..) hora oficial del (..\/..\/....)'
     pat_hd2 = r'(..:..) del (..\/..\/....)'
     pat_inicio = re.compile(r'Hora de comienzo: ' + pat_hora)
     pat_fin = re.compile(r'Hora de finalización: ' + pat_hora)
-    pat_fecha2 = re.compile(pat_hd2 + ' a ' + pat_hd2 + r' hora oficial\.')
+    pat_fecha2 = re.compile(pat_hd2 + ' a ' + pat_hd2 + r' hora oficial')
 
     def __init__(self, filename):
-        file = open(filename, encoding = 'latin1')
-        content = file.read()
-        self.lines = [removed(line,'\n') for line in content.split('.\n')]
-        file.close()
+        
+        self.get_lines(filename)
         self.iline = 0
         self.tipo_nuevo = True
+        
+    def get_lines(self, filename):
+        file = open(filename, encoding = 'latin1')
+        content = file.readlines()
+        file.close()
+        
+        self.lines = []
+        on_header = True
+        for content_item in content:
+            content_line = content_item[:-1]
+            if on_header:
+                if len(content_line) == 0 or content_line[-1] != '.':
+                    self.lines.append(content_line)
+                else:
+                    on_header = False
+                    line = content_line[:-1]
+                    self.lines.append(line)
+                    line = ''
+            else:
+                if len(content_line) != 0 and content_line[-1] != '.':
+                    line += content_line + ' '
+                else:
+                    if len(content_line) != 0:
+                        line += content_line[:-1]
+                    self.lines.append(line)
+                    line = ''
 
     def end(self):
         return self.iline >= len(self.lines)
