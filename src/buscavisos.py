@@ -4,30 +4,28 @@ import re
 
 from avisos_parser import parse_file
 
-pat_dia = re.compile(r'(..)/(..)/(....)')
-
 def filtrado():
     path_avisos = '../avisos/*/*'
     for file in glob.glob(path_avisos):
-        avisos = parse_file(file)
-        for aviso in avisos:
+        for aviso in parse_file(file):
             if (aviso.fenomeno == 'Vientos' and
                 ('Lleida' in aviso.ambitos or
                  'Lleida - Valle de Arán' in aviso.ambitos)):
                 yield aviso
 
 def get_fechas(aviso):
-    d1,m1,a1 = pat_dia.match(aviso.dia_comienzo).groups()
-    fecha1 = date(int(a1),int(m1),int(d1))
-    d2,m2,a2 = pat_dia.match(aviso.dia_fin).groups()
-    fecha2 = date(int(a2),int(m2),int(d2))
+    fecha1 = dia_to_fecha(aviso.dia_comienzo)
+    fecha2 = dia_to_fecha(aviso.dia_fin)
     if aviso.hora_fin == '00:00':
         fecha2 -= timedelta(1)
-    delta = (fecha2 - fecha1)
-    days = delta.days + 1
-    rango = [fecha1 + timedelta(i) for i in range(days)]
+    intervalo = (fecha2 - fecha1)
+    rango = [fecha1 + timedelta(i) for i in range(intervalo.days+1)]
     return [fecha.strftime('%Y-%m-%d') for fecha in rango]
 
+def dia_to_fecha(dia):
+    dia,mes,year = dia.split(r'/')
+    return date(int(year),int(mes),int(dia))
+    
 def main():
     fechas = set([])
     for aviso in filtrado():
